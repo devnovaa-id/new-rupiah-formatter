@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declarationDir": "./dist/types",
+    "outDir": "./dist",
+    "jsx": "preserve"
+  },
+  "exclude": [
+    "tests", 
+    "examples", 
+    "**/*.test.ts", 
+    "**/*.spec.ts",
+    "src/react/**/*",
+    "src/hooks/**/*"
+  ]
+}

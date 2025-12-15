@@ -1,0 +1,73 @@
+{
+  "name": "@devnovaa-id/new-rupiah-formatter",
+  "version": "1.0.0",
+  "description": "A flexible, customizable Rupiah formatter library with international support",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react/index.esm.js",
+      "require": "./dist/react/index.js",
+      "types": "./dist/react/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "npm run clean && npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir dist",
+    "build:esm": "tsc -p tsconfig.build.json --module esnext --outDir dist/esm",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "rupiah",
+    "currency",
+    "formatter",
+    "indonesia",
+    "money",
+    "format",
+    "international",
+    "react",
+    "vue",
+    "angular"
+  ],
+  "author": "this key <this.key@devnova.icu>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devnovaa-id/new-rupiah-formatter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devnovaa-id/new-rupiah-formatter/issues"
+  },
+  "homepage": "https://devnova.icu/packages/rupiah-formatter",
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "jest": "^29.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.3.2"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
