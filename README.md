@@ -315,17 +315,17 @@ v1.0.0 (2025-12-15)
 
 MIT License © 2025 DevNova-ID
 
-See the LICENSE file for full details.
+See the [LICENSE](https://github.com/devnovaa-id/new-rupiah-formatter/LICENSE) file for full details.
 
 👨‍💻 Author
 
 this key <this.key@devnova.icu>
 
-· 🌐 Website: devnova.icu
-· 🔧 API Service: api.devnova.icu
-· 💻 GitHub: @devnovaa-id
-· 💰 Support: Saweria
-· 📧 Email: this.key@devnova.icu
+· 🌐 Website: [devnova.icu](https://devnova.icu)
+· 🔧 API Service: [api.devnova.icu](https://api.devnova.icu)
+· 💻 GitHub: [@devnovaa-id](https://github.com/devnovaa-id/new-rupiah-formatter)
+· 💰 Support: [Saweria](https://saweria.co/thisssskeyyyy)
+· 📧 Email: [this.key@devnova.icu](mailto:this.key@devnova.icu)
 
 🌟 Star History
 
@@ -356,22 +356,22 @@ npm install @devnovaa-id/new-rupiah-formatter
 
 📞 Support & Feedback
 
-· 🐛 Issues: [GitHub Issues](https)
-· 💬 Discussions: [GitHub Discussions]()
-· 📧 Email: this.key@devnova.icu
+· 🐛 Issues: [GitHub Issues](https://github.com/devnovaa-id/new-rupiah-formatter/issues)
+· 💬 Discussions: [GitHub Discussions](https://github.com/devnovaa-id/new-rupiah-formatter/discussions)
+· 📧 Email: [this.key@devnova.icu](mailto:this.key@devnova.icu)
 
 🔗 Links
 
-· 📚 Documentation
-· 🏠 Homepage
-· 📦 NPM Package
-· 🐙 GitHub Repo
+· 📚 [Documentation](https://github.com/devnovaa-id/new-rupiah-formatter/README.md)
+· 🏠 [Homepage](https://github.com/devnovaa-id/new-rupiah-formatter)
+· 📦 [NPM Package](https://www.npmjs.com/package/@devnovaa-id/new-rupiah-formatter)
+· 🐙 [GitHub Repo](https://github.com/devnovaa-id)
 
 ---
 
 <div align="center">
 
-Made with ❤️ by DevNova-ID
+Made with ❤️ by [DevNova-ID](https://devnova.icu)
 
 Making Rupiah formatting easier, more flexible, and professional
 
