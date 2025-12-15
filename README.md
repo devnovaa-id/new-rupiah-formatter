@@ -28,9 +28,9 @@ yarn add @devnovaa-id/new-rupiah-formatter
 pnpm add @devnovaa-id/new-rupiah-formatter
 ```
 
-🚀 Quick Start
+## 🚀 Quick Start
 
-Basic Formatting
+### Basic Formatting
 
 ```javascript
 import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';
@@ -40,7 +40,7 @@ console.log(formatRupiah(1234567.89));    // "Rp 1.234.567,89"
 console.log(formatRupiah(-5000));         // "-Rp 5.000"
 ```
 
-Parsing & Validation
+### Parsing & Validation
 
 ```javascript
 import { parseRupiah, isValidRupiah } from '@devnovaa-id/new-rupiah-formatter';
@@ -50,21 +50,22 @@ isValidRupiah('Rp 1.000');         // true
 isValidRupiah('invalid string');   // false
 ```
 
-🎯 Key Features
+## 🎯 Key Features
 
-Feature Description Status
-✅ Easy to Use One function for all needs 🚀
-🌍 International Multi-locale support (ID, US, DE, FR, etc.) 🌐
-⚛️ React Ready Built-in hooks & components ⚛️
-🔧 Customizable Full control over formatting 🛠️
-🏷️ Alias System Create your own formatting presets 🎨
-📦 Zero Dependencies Lightweight & Fast ⚡
-🧪 Fully Tested 100% test passing ✅
-📝 TypeScript First-class TypeScript support 🔷
+| Feature | Description | Status |
+|-------|------------|--------|
+| Easy to Use | One function for all needs | 🚀 |
+| International | Multi-locale support (ID, US, DE, FR, etc.) | 🌍 |
+| React Ready | Built-in hooks & components | ⚛️ |
+| Customizable | Full control over formatting | 🛠️ |
+| Alias System | Create your own formatting presets | 🎨 |
+| Zero Dependencies | Lightweight & fast | ⚡ |
+| Fully Tested | 100% test passing | ✅ |
+| TypeScript | First-class TypeScript support | 🔷 |
 
-🔧 Advanced Usage
+## 🔧 Advanced Usage
 
-Formatter Class
+### Formatter Class
 
 ```javascript
 import { RupiahFormatter } from '@devnovaa-id/new-rupiah-formatter';
@@ -91,7 +92,7 @@ formatter.usePreset('international');
 formatter.format(1234567.89); // "IDR 1,234,567.89"
 ```
 
-React Hook & Component
+### React Hook & Component
 
 ```jsx
 import React from 'react';
@@ -123,7 +124,7 @@ function ProductCard({ product }) {
 }
 ```
 
-International Support
+### International Support
 
 ```javascript
 import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';
@@ -140,17 +141,17 @@ formatRupiah(1234567.89, { locale: 'de-DE' }); // "IDR 1.234.567,89"
 // French format
 formatRupiah(1234567.89, { locale: 'fr-FR' }); // "IDR 1 234 567,89"
 ```
+## 📖 API Reference
 
-📖 API Reference
+### Core Functions
 
-Core Functions
+| Function | Type Signature | Description |
+|---------|---------------|-------------|
+| `formatRupiah` | `(value: InputValue, options?: Options) => string` | Format value to Rupiah string |
+| `parseRupiah` | `(formattedString: string) => number` | Parse Rupiah string to number |
+| `isValidRupiah` | `(formattedString: string) => boolean` | Validate Rupiah string format |
 
-Function Type Signature Description
-formatRupiah (value: InputValue, options?: Options) => string Format value to Rupiah string
-parseRupiah (formattedString: string) => number Parse Rupiah string to number
-isValidRupiah (formattedString: string) => boolean Validate Rupiah string format
-
-RupiahFormatter Class
+### RupiahFormatter Class
 
 ```typescript
 class RupiahFormatter {
@@ -168,7 +169,7 @@ class RupiahFormatter {
 }
 ```
 
-Formatting Options
+### Formatting Options
 
 ```typescript
 interface RupiahFormatOptions {
@@ -186,7 +187,7 @@ interface RupiahFormatOptions {
 }
 ```
 
-Built-in Presets
+### Built-in Presets
 
 ```javascript
 import { PRESETS } from '@devnovaa-id/new-rupiah-formatter';
@@ -200,32 +201,42 @@ import { PRESETS } from '@devnovaa-id/new-rupiah-formatter';
 // - 'standard': standard Indonesian format
 ```
 
-🌐 Browser & Environment Support
+## 🌐 Browser & Environment Support
 
-Browser Support
+### Browser Support
 
-· ✅ Chrome 60+
-· ✅ Firefox 55+
-· ✅ Safari 12+
-· ✅ Edge 79+
+| Browser | Minimum Version |
+|--------|------------------|
+| Chrome | 60+ |
+| Firefox | 55+ |
+| Safari | 12+ |
+| Edge | 79+ |
 
-Framework Support
+---
 
-· ✅ React 16.8+ (hooks ready)
-· ✅ Vue 2/3 (via composition)
-· ✅ Angular 10+ (via services)
-· ✅ Next.js
-· ✅ Nuxt.js
-· ✅ Svelte
+### Framework Support
 
-Module Systems
+| Framework | Notes |
+|----------|-------|
+| React | 16.8+ (Hooks ready) |
+| Vue | 2 / 3 (Composition API) |
+| Angular | 10+ (Services) |
+| Next.js | Supported |
+| Nuxt.js | Supported |
+| Svelte | Supported |
 
-· ✅ ES Modules (import/export)
-· ✅ CommonJS (require)
-· ✅ UMD (browser global)
-· ✅ TypeScript (.d.ts)
+---
 
-📊 Benchmark
+### Module Systems
+
+| Module System | Support |
+|--------------|---------|
+| ES Modules | `import / export` |
+| CommonJS | `require()` |
+| UMD | Browser global |
+| TypeScript | `.d.ts` included |
+
+## 📊 Benchmark
 
 ```javascript
 // Performance test
@@ -237,7 +248,7 @@ const end = performance.now();
 console.log(`10,000 formats in ${end - start}ms`); // ~50ms on M1 Mac
 ```
 
-🧪 Testing
+## 🧪 Testing
 
 ```bash
 # Run all tests
@@ -250,9 +261,9 @@ npm run test:coverage
 npm run test:watch
 ```
 
-🔧 Development
+## 🔧 Development
 
-Setup Development
+### Setup Development
 
 ```bash
 # Clone repository
@@ -269,7 +280,7 @@ npm run build
 npm test
 ```
 
-Project Structure
+### Project Structure
 
 ```
 src/
@@ -281,15 +292,24 @@ src/
 └── index.ts        # Main entry point
 ```
 
-🤝 Contributing
+## 🤝 Contributing
 
 We welcome contributions! Here's how you can contribute:
 
 1. Fork the repository
 2. Clone your fork
-3. Create a new branch: git checkout -b feature/amazing-feature
-4. Commit your changes: git commit -m 'Add amazing feature'
-5. Push to the branch: git push origin feature/amazing-feature
+3. Create a new branch:
+```bash 
+git checkout -b feature/amazing-feature 
+```
+4. Commit your changes: 
+```bash 
+git commit -m 'Add amazing feature' 
+```
+5. Push to the branch: 
+```bash 
+git push origin feature/amazing-feature 
+```
 6. Open a Pull Request
 
 Coding Standards
@@ -299,50 +319,54 @@ Coding Standards
 · Add tests for new features
 · Update documentation if needed
 
-📝 Changelog
+## 📝 Changelog
 
-v1.0.0 (2025-12-15)
+### v1.0.0 — 2025-12-15
 
-· ✅ Initial release
-· ✅ Core formatting functionality
-· ✅ International locale support
-· ✅ React hooks & components
-· ✅ Comprehensive test suite
-· ✅ TypeScript definitions
-· ✅ Zero dependencies
+- ✅ Initial release
+- ✅ Core formatting functionality
+- ✅ International locale support
+- ✅ React hooks & components
+- ✅ Comprehensive test suite
+- ✅ TypeScript definitions
+- ✅ Zero dependencies
 
-📄 License
+## 📄 License
 
-MIT License © 2025 DevNova-ID
+MIT License © 2025 DevNova-ID  
 
-See the [LICENSE](https://github.com/devnovaa-id/new-rupiah-formatter/LICENSE) file for full details.
+See the [LICENSE](https://github.com/devnovaa-id/new-rupiah-formatter/blob/main/LICENSE) file for full details.
 
-👨‍💻 Author
+---
 
-this key <this.key@devnova.icu>
+## 👨‍💻 Author
 
-· 🌐 Website: [devnova.icu](https://devnova.icu)
-· 🔧 API Service: [api.devnova.icu](https://api.devnova.icu)
-· 💻 GitHub: [@devnovaa-id](https://github.com/devnovaa-id/new-rupiah-formatter)
-· 💰 Support: [Saweria](https://saweria.co/thisssskeyyyy)
-· 📧 Email: [this.key@devnova.icu](mailto:this.key@devnova.icu)
+**this key**  
+📧 this.key@devnova.icu  
 
-🌟 Star History
+- 🌐 Website: [https://devnova.icu](https://devnova.icu)  
+- 🔧 API Service: [https://api.devnova.icu](https://api.devnova.icu)  
+- 💻 GitHub: [@devnovaa-id](https://github.com/devnovaa-id/new-rupiah-formatter)  
+- 💰 Support: [Saweria](https://saweria.co/thisssskeyyyy)  
+- 📧 Email: [this.key@devnova.icu](mailto:this.key@devnova.icu)
 
-https://api.star-history.com/svg?repos=devnovaa-id/new-rupiah-formatter&type=Date
+---
 
+## 🌟 Star History
+
+![Star History](https://api.star-history.com/svg?repos=devnovaa-id/new-rupiah-formatter&type=Date)
 ---
 
 <div align="center">
 
-🚀 Ready for production?
+## 🚀 Ready for production?
 
 Yes! This library is:
 
-· ✅ 100% test coverage
-· ✅ TypeScript support
-· ✅ Zero dependencies
-· ✅ Production ready
+- ✅ 100% test coverage
+- ✅ TypeScript support
+- ✅ Zero dependencies
+- ✅ Production ready
 
 Download now and start formatting Rupiah professionally!
 
@@ -354,25 +378,24 @@ npm install @devnovaa-id/new-rupiah-formatter
 
 ---
 
-📞 Support & Feedback
+## 📞 Support & Feedback
 
-· 🐛 Issues: [GitHub Issues](https://github.com/devnovaa-id/new-rupiah-formatter/issues)
-· 💬 Discussions: [GitHub Discussions](https://github.com/devnovaa-id/new-rupiah-formatter/discussions)
-· 📧 Email: [this.key@devnova.icu](mailto:this.key@devnova.icu)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/devnovaa-id/new-rupiah-formatter/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/devnovaa-id/new-rupiah-formatter/discussions)
+- 📧 **Email**: [this.key@devnova.icu](mailto:this.key@devnova.icu)
 
-🔗 Links
+## 🔗 Links
 
-· 📚 [Documentation](https://github.com/devnovaa-id/new-rupiah-formatter/README.md)
-· 🏠 [Homepage](https://github.com/devnovaa-id/new-rupiah-formatter)
-· 📦 [NPM Package](https://www.npmjs.com/package/@devnovaa-id/new-rupiah-formatter)
-· 🐙 [GitHub Repo](https://github.com/devnovaa-id)
+- 📚 [Documentation](https://github.com/devnovaa-id/new-rupiah-formatter#readme)
+- 🏠 [Homepage](https://github.com/devnovaa-id/new-rupiah-formatter)
+- 📦 [NPM Package](https://www.npmjs.com/package/@devnovaa-id/new-rupiah-formatter)
+- 🐙 [GitHub Repo](https://github.com/devnovaa-id)
 
 ---
 
 <div align="center">
 
-Made with ❤️ by [DevNova-ID](https://devnova.icu)
-
-Making Rupiah formatting easier, more flexible, and professional
+Made with ❤️ by **[DevNova-ID](https://devnova.icu)**  
+Making Rupiah formatting easier, more flexible, and professional.
 
 </div>

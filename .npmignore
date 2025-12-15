@@ -13,6 +13,8 @@ docs/
 tsconfig.json
 tsconfig.build.json
 tsup.config.ts
+tsconfig.jest.json
+tsconfig.react.json
 biome.json
 vitest.config.ts
 eslint.config.js
