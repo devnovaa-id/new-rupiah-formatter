@@ -1,5 +1,6 @@
 src/
 tests/
+coverage/
 benchmarks/
 examples/
 docs/
@@ -15,6 +16,8 @@ tsconfig.build.json
 tsup.config.ts
 tsconfig.jest.json
 tsconfig.react.json
+.eslintrc.js
+jest.config.js
 biome.json
 vitest.config.ts
 eslint.config.js
