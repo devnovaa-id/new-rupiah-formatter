@@ -58,7 +58,7 @@
   "bugs": {
     "url": "https://github.com/devnovaa-id/new-rupiah-formatter/issues"
   },
-  "homepage": "https://devnova.icu/packages/rupiah-formatter",
+  "homepage": "https://newrupiahformatter.devnova.icu",
   "devDependencies": {
     "@jest/globals": "^30.2.0",
     "@types/jest": "^29.5.14",

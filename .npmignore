@@ -17,6 +17,7 @@ tsup.config.ts
 tsconfig.jest.json
 tsconfig.react.json
 backup.ts
+index.html
 project-backup.md
 .eslintrc.js
 jest.config.js
