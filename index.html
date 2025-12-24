@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@devnovaa-id/new-rupiah-formatter v1.2.0 - Rupiah Formatter Library</title>
+    <!-- Load Tailwind CSS v4.1 CDN -->
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    
+    <!-- Konfigurasi tema via CSS Custom Properties -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        /* Konfigurasi Tailwind v4 via CSS */
+        @layer theme {
+            :root {
+                --color-primary-50: #eff6ff;
+                --color-primary-100: #dbeafe;
+                --color-primary-200: #bfdbfe;
+                --color-primary-300: #93c5fd;
+                --color-primary-400: #60a5fa;
+                --color-primary-500: #3b82f6;
+                --color-primary-600: #2563eb;
+                --color-primary-700: #1d4ed8;
+                --color-primary-800: #1e40af;
+                --color-primary-900: #1e3a8a;
+                
+                --color-secondary-50: #f0fdf4;
+                --color-secondary-100: #dcfce7;
+                --color-secondary-200: #bbf7d0;
+                --color-secondary-300: #86efac;
+                --color-secondary-400: #4ade80;
+                --color-secondary-500: #22c55e;
+                --color-secondary-600: #16a34a;
+                --color-secondary-700: #15803d;
+                --color-secondary-800: #166534;
+                --color-secondary-900: #14532d;
+                
+                --font-inter: 'Inter', system-ui, sans-serif;
+                --font-jetbrains: 'JetBrains Mono', monospace;
+            }
+        }
+        
+        /* Custom Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        /* Custom Styles */
+        .gradient-border {
+            border: 2px solid transparent;
+            background: 
+                linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, var(--color-primary-500), #10b981) border-box;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--color-primary-500), #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, var(--color-primary-500), #10b981);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: #2d3748;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        
+        pre[class*="language-"] {
+            border-radius: 0 0 0.5rem 0.5rem !important;
+        }
+        
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-primary-500), #10b981);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .changelog-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .changelog-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-primary-500);
+            border: 3px solid var(--color-primary-50);
+        }
+        
+        .changelog-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2.5rem;
+            bottom: -1.5rem;
+            width: 2px;
+            background: #e2e8f0;
+        }
+        
+        .changelog-item:last-child::after {
+            display: none;
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Custom utilities untuk Tailwind v4 */
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-gradient {
+            animation: gradient 8s linear infinite;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Font family custom */
+        .font-inter {
+            font-family: var(--font-inter);
+        }
+        
+        .font-jetbrains {
+            font-family: var(--font-jetbrains);
+        }
+    </style>
+    
+    <!-- Prism.js untuk syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="font-inter bg-gray-50 text-gray-800">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary-600 to-secondary-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-coins text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">
+                        RupiahFormatter
+                    </span>
+                    <span class="text-xs font-semibold bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
+                        v1.2.0
+                    </span>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#features" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Features</a>
+                    <a href="#quickstart" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Quick Start</a>
+                    <a href="#api" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">API</a>
+                    <a href="#demo" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Demo</a>
+                    <a href="https://github.com/devnovaa-id/new-rupiah-formatter" target="_blank" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                
+                <button onclick="scrollToSection('installation')" class="bg-gradient-to-r from-primary-600 to-secondary-500 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all shadow hover:shadow-primary-200">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-secondary-50"></div>
+        <div class="absolute top-0 right-0 w-64 h-64 bg-primary-300 rounded-full -translate-y-32 translate-x-32 opacity-20"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-secondary-300 rounded-full translate-y-48 -translate-x-48 opacity-20"></div>
+        
+        <div class="container mx-auto px-4 relative">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-flex items-center gap-2 mb-6 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
+                    <span class="text-sm font-semibold text-primary-700">✨ v1.2.0 Released</span>
+                    <span class="text-xs text-gray-500">•</span>
+                    <span class="text-sm text-gray-600">Enhanced performance & caching</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="block text-gray-900">The Complete</span>
+                    <span class="gradient-text">Rupiah Formatter</span>
+                    <span class="block text-gray-900">for Modern Apps</span>
+                </h1>
+                
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    A flexible, zero-dependency library for formatting, parsing, and validating Indonesian Rupiah with TypeScript support and React hooks.
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-12">
+                    <button onclick="scrollToSection('installation')" class="bg-gradient-to-r from-primary-600 to-secondary-500 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-primary-300 flex items-center gap-2">
+                        <i class="fas fa-rocket"></i>
+                        <span>Get Started</span>
+                    </button>
+                    <button onclick="scrollToSection('demo')" class="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:border-primary-300 hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Live Demo</span>
+                    </button>
+                    <a href="https://github.com/devnovaa-id/new-rupiah-formatter" target="_blank" class="bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div class="text-2xl font-bold text-primary-600">0</div>
+                        <div class="text-sm text-gray-600">Dependencies</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div class="text-2xl font-bold text-primary-600">100%</div>
+                        <div class="text-sm text-gray-600">Test Coverage</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div class="text-2xl font-bold text-primary-600">9KB</div>
+                        <div class="text-sm text-gray-600">Bundle Size</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div class="text-2xl font-bold text-primary-600">9</div>
+                        <div class="text-sm text-gray-600">Built-in Presets</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section id="features" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="inline-block px-4 py-1 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-3">FEATURES</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Everything You Need for Rupiah Formatting</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Designed for developers who need reliable, flexible, and performant Rupiah formatting.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm hover-lift border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-4">
+                        <i class="fas fa-bolt text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Smart Formatting</h3>
+                    <p class="text-gray-600">Intelligent parsing of Indonesian & international formats with automatic locale detection.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm hover-lift border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-secondary-500 to-secondary-600 flex items-center justify-center mb-4">
+                        <i class="fab fa-react text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">React Ready</h3>
+                    <p class="text-gray-600">Built-in hooks (useRupiah, useRupiahState) and components (RupiahDisplay) for React apps.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm hover-lift border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4">
+                        <i class="fas fa-sliders-h text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Fully Customizable</h3>
+                    <p class="text-gray-600">Control symbols, separators, precision, negative formats, and zero handling.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm hover-lift border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center mb-4">
+                        <i class="fas fa-globe text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Multi-Locale</h3>
+                    <p class="text-gray-600">Support for ID, US, DE, FR locales with proper separator handling.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm hover-lift border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center mb-4">
+                        <i class="fas fa-tachometer-alt text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Performance Optimized</h3>
+                    <p class="text-gray-600">Smart caching, memoization, weak references, and zero dependencies for speed.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm hover-lift border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-4">
+                        <i class="fas fa-shield-alt text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">TypeScript First</h3>
+                    <p class="text-gray-600">Full TypeScript support with comprehensive type definitions and IntelliSense.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation -->
+    <section id="installation" class="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <span class="inline-block px-4 py-1 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-3">INSTALLATION</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Get Started in Seconds</h2>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Install via package manager</h3>
+                        <p class="text-gray-600">Choose your preferred package manager to install the library.</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="flex border-b border-gray-200 mb-6">
+                            <button class="tab-btn active px-4 py-2 font-medium text-gray-900 border-b-2 border-primary-600" onclick="changeTab('npm')">
+                                <i class="fab fa-npm mr-2"></i>npm
+                            </button>
+                            <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-gray-900" onclick="changeTab('yarn')">
+                                <i class="fab fa-yarn mr-2"></i>yarn
+                            </button>
+                            <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-gray-900" onclick="changeTab('pnpm')">
+                                <i class="fas fa-box mr-2"></i>pnpm
+                            </button>
+                        </div>
+                        
+                        <div id="npm-tab" class="tab-content">
+                            <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-terminal text-gray-400"></i>
+                                        <span class="text-gray-300 font-jetbrains text-sm">Terminal</span>
+                                    </div>
+                                    <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('npm-code')">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                                <pre id="npm-code" class="language-bash p-4 m-0 overflow-x-auto"><code class="language-bash">npm install @devnovaa-id/new-rupiah-formatter</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div id="yarn-tab" class="tab-content hidden">
+                            <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-terminal text-gray-400"></i>
+                                        <span class="text-gray-300 font-jetbrains text-sm">Terminal</span>
+                                    </div>
+                                    <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('yarn-code')">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                                <pre id="yarn-code" class="language-bash p-4 m-0 overflow-x-auto"><code class="language-bash">yarn add @devnovaa-id/new-rupiah-formatter</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div id="pnpm-tab" class="tab-content hidden">
+                            <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-terminal text-gray-400"></i>
+                                        <span class="text-gray-300 font-jetbrains text-sm">Terminal</span>
+                                    </div>
+                                    <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('pnpm-code')">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                                <pre id="pnpm-code" class="language-bash p-4 m-0 overflow-x-auto"><code class="language-bash">pnpm add @devnovaa-id/new-rupiah-formatter</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section id="quickstart" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <span class="inline-block px-4 py-1 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-3">QUICK START</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Start Formatting in Minutes</h2>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-8 mb-12">
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-primary-50 to-white p-6 rounded-2xl border border-primary-100">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Basic Formatting</h3>
+                            <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fab fa-js text-yellow-400"></i>
+                                        <span class="text-gray-300 font-jetbrains text-sm">JavaScript</span>
+                                    </div>
+                                    <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('basic-code')">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                                <pre id="basic-code" class="language-javascript p-4 m-0 overflow-x-auto"><code class="language-javascript">import { formatRupiah, parseRupiah } from '@devnovaa-id/new-rupiah-formatter';
+
+// Basic formatting
+console.log(formatRupiah(1000));           // "Rp 1.000"
+console.log(formatRupiah(1234567.89));    // "Rp 1.234.567,89"
+console.log(formatRupiah(-5000));         // "-Rp 5.000"
+
+// Parsing formatted strings
+console.log(parseRupiah('Rp 1.234.567,89')); // 1234567.89
+
+// Validation
+import { isValidRupiah } from '@devnovaa-id/new-rupiah-formatter';
+console.log(isValidRupiah('Rp 1.000'));   // true</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-secondary-50 to-white p-6 rounded-2xl border border-secondary-100">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">React Integration</h3>
+                            <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fab fa-react text-blue-400"></i>
+                                        <span class="text-gray-300 font-jetbrains text-sm">React</span>
+                                    </div>
+                                    <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('react-code')">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                                <pre id="react-code" class="language-jsx p-4 m-0 overflow-x-auto"><code class="language-jsx">import React from 'react';
+import { useRupiah, RupiahDisplay } from '@devnovaa-id/new-rupiah-formatter/react';
+
+function ProductCard({ product }) {
+  const { format } = useRupiah();
+  
+  return (
+    &lt;div className="product-card"&gt;
+      &lt;h3&gt;{product.name}&lt;/h3&gt;
+      &lt;RupiahDisplay 
+        value={product.price}
+        className="text-2xl font-bold"
+        options={{
+          symbol: 'Rp',
+          spaceBetween: false,
+          stripTrailingZero: true
+        }}
+      /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-purple-50 to-white p-6 rounded-2xl border border-purple-100">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Advanced Features</h3>
+                            <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fab fa-js text-yellow-400"></i>
+                                        <span class="text-gray-300 font-jetbrains text-sm">JavaScript</span>
+                                    </div>
+                                    <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('advanced-code')">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                                <pre id="advanced-code" class="language-javascript p-4 m-0 overflow-x-auto"><code class="language-javascript">import { RupiahFormatter } from '@devnovaa-id/new-rupiah-formatter';
+
+// Create formatter instance
+const formatter = new RupiahFormatter({
+  symbol: 'IDR',
+  decimalSeparator: '.',
+  thousandSeparator: ',',
+  spaceBetween: false
+});
+
+// Advanced formatting
+console.log(formatter.format(1234567.89));
+// "IDR1,234,567.89"
+
+// Create and use aliases
+formatter.createAlias('compact', {
+  stripTrailingZero: true,
+  spaceBetween: false,
+  precision: 0
+});
+console.log(formatter.formatWithAlias(1000.50, 'compact'));
+// "IDR1,001"
+
+// Range formatting
+console.log(formatter.formatRange(1000, 5000));
+// "IDR1,000 - IDR5,000"
+
+// With abbreviation
+console.log(formatter.formatWithAbbreviation(1500000));
+// "IDR1,500,000 (≈1.5M)"</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-orange-50 to-white p-6 rounded-2xl border border-orange-100">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Preset Examples</h3>
+                            <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fab fa-js text-yellow-400"></i>
+                                        <span class="text-gray-300 font-jetbrains text-sm">JavaScript</span>
+                                    </div>
+                                    <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('preset-code')">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                                <pre id="preset-code" class="language-javascript p-4 m-0 overflow-x-auto"><code class="language-javascript">import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';
+
+// Built-in presets
+console.log(formatRupiah(1234567.89, { preset: 'standard' }));
+// "Rp 1.234.567,89"
+
+console.log(formatRupiah(1234567.89, { preset: 'compact' }));
+// "Rp1.234.568"
+
+console.log(formatRupiah(1234567.89, { preset: 'international' }));
+// "IDR 1,234,567.89"
+
+console.log(formatRupiah(1234567.89, { preset: 'ecommerce' }));
+// "Rp1.234.568"
+
+console.log(formatRupiah(1234567.89, { preset: 'financial' }));
+// "Rp 1.234.567,89"
+
+console.log(formatRupiah(1234567.89, { preset: 'crypto' }));
+// "1,234,567.89000000"</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Demo -->
+    <section id="demo" class="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <span class="inline-block px-4 py-1 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-3">LIVE DEMO</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Interactive Playground</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Try out different formatting options and see the results instantly.</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-900">Rupiah Formatter Playground</h3>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+                                    <input type="number" id="demo-amount" value="1234567.89" step="1000" 
+                                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Symbol</label>
+                                        <select id="demo-symbol" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                                            <option value="Rp">Rp (ID)</option>
+                                            <option value="IDR">IDR (International)</option>
+                                            <option value="$">$</option>
+                                            <option value="€">€</option>
+                                            <option value="">No Symbol</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Preset</label>
+                                        <select id="demo-preset" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                                            <option value="standard">Standard</option>
+                                            <option value="compact">Compact</option>
+                                            <option value="international">International</option>
+                                            <option value="ecommerce">E-commerce</option>
+                                            <option value="financial">Financial</option>
+                                            <option value="mobile">Mobile</option>
+                                            <option value="crypto">Crypto</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Decimal Separator</label>
+                                        <select id="demo-decimal" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                                            <option value=",">, (comma)</option>
+                                            <option value=".">. (dot)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Thousand Separator</label>
+                                        <select id="demo-thousand" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                                            <option value=".">. (dot)</option>
+                                            <option value=",">, (comma)</option>
+                                            <option value=" ">Space</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Precision: <span id="precision-value">2</span> decimals</label>
+                                    <input type="range" id="demo-precision" min="0" max="8" value="2" step="1" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-600">
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-3">
+                                        <label class="flex items-center gap-2">
+                                            <input type="checkbox" id="demo-space" checked class="rounded text-primary-600 focus:ring-primary-500">
+                                            <span class="text-sm text-gray-700">Space Between</span>
+                                        </label>
+                                        <label class="flex items-center gap-2">
+                                            <input type="checkbox" id="demo-strip" checked class="rounded text-primary-600 focus:ring-primary-500">
+                                            <span class="text-sm text-gray-700">Strip Trailing Zero</span>
+                                        </label>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <label class="flex items-center gap-2">
+                                            <input type="checkbox" id="demo-hide-zero" class="rounded text-primary-600 focus:ring-primary-500">
+                                            <span class="text-sm text-gray-700">Hide Zero</span>
+                                        </label>
+                                        <label class="flex items-center gap-2">
+                                            <input type="checkbox" id="demo-negative" class="rounded text-primary-600 focus:ring-primary-500">
+                                            <span class="text-sm text-gray-700">Make Negative</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button onclick="runDemo()" class="w-full bg-gradient-to-r from-primary-600 to-secondary-500 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+                                    <i class="fas fa-play mr-2"></i> Format Rupiah
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Formatted Output</label>
+                                    <div id="demo-output" class="p-8 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 text-white text-3xl font-bold text-center min-h-[120px] flex items-center justify-center">
+                                        Rp 1.234.567,89
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Generated Code</label>
+                                    <div id="demo-code" class="bg-gray-900 text-gray-300 p-4 rounded-lg font-jetbrains text-sm overflow-x-auto min-h-[150px]">
+// Generated code will appear here
+                                    </div>
+                                    <button onclick="copyDemoCode()" class="w-full mt-3 bg-gray-800 text-white py-2 rounded-lg font-medium hover:bg-gray-700 transition flex items-center justify-center">
+                                        <i class="far fa-copy mr-2"></i> Copy Code
+                                    </button>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button onclick="loadExample('abbreviation')" class="bg-primary-50 text-primary-700 py-2 rounded-lg font-medium hover:bg-primary-100 transition flex items-center justify-center">
+                                        <i class="fas fa-abacus mr-2"></i> Abbreviation
+                                    </button>
+                                    <button onclick="loadExample('range')" class="bg-secondary-50 text-secondary-700 py-2 rounded-lg font-medium hover:bg-secondary-100 transition flex items-center justify-center">
+                                        <i class="fas fa-arrows-left-right mr-2"></i> Range
+                                    </button>
+                                    <button onclick="loadExample('percentage')" class="bg-purple-50 text-purple-700 py-2 rounded-lg font-medium hover:bg-purple-100 transition flex items-center justify-center">
+                                        <i class="fas fa-percent mr-2"></i> Percentage
+                                    </button>
+                                    <button onclick="loadExample('growth')" class="bg-orange-50 text-orange-700 py-2 rounded-lg font-medium hover:bg-orange-100 transition flex items-center justify-center">
+                                        <i class="fas fa-chart-line mr-2"></i> Growth
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="stats-card p-6 rounded-2xl text-center">
+                        <div class="text-3xl font-bold" id="cache-hits">0</div>
+                        <div class="text-sm opacity-90">Cache Hits</div>
+                    </div>
+                    <div class="stats-card p-6 rounded-2xl text-center">
+                        <div class="text-3xl font-bold" id="cache-misses">0</div>
+                        <div class="text-sm opacity-90">Cache Misses</div>
+                    </div>
+                    <div class="stats-card p-6 rounded-2xl text-center">
+                        <div class="text-3xl font-bold" id="cache-hit-rate">0%</div>
+                        <div class="text-sm opacity-90">Hit Rate</div>
+                    </div>
+                    <div class="stats-card p-6 rounded-2xl text-center">
+                        <div class="text-3xl font-bold" id="cache-size">0</div>
+                        <div class="text-sm opacity-90">Cache Size</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Reference -->
+    <section id="api" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <span class="inline-block px-4 py-1 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-3">API REFERENCE</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Complete API Documentation</h2>
+                </div>
+                
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-8">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-xl font-semibold text-gray-900">Core Functions</h3>
+                            </div>
+                            <div class="p-6">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="border-b border-gray-200">
+                                            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Function</th>
+                                            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                            <td class="py-3 px-4">
+                                                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-jetbrains">formatRupiah()</code>
+                                            </td>
+                                            <td class="py-3 px-4 text-gray-600">Format value to Rupiah string</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                            <td class="py-3 px-4">
+                                                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-jetbrains">parseRupiah()</code>
+                                            </td>
+                                            <td class="py-3 px-4 text-gray-600">Parse Rupiah string to number</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                            <td class="py-3 px-4">
+                                                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-jetbrains">isValidRupiah()</code>
+                                            </td>
+                                            <td class="py-3 px-4 text-gray-600">Validate Rupiah string format</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                            <td class="py-3 px-4">
+                                                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-jetbrains">formatRupiahWithAbbreviation()</code>
+                                            </td>
+                                            <td class="py-3 px-4 text-gray-600">Format with K/M/B/T abbreviation</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="py-3 px-4">
+                                                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-jetbrains">formatRupiahRange()</code>
+                                            </td>
+                                            <td class="py-3 px-4 text-gray-600">Format a range of values</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-xl font-semibold text-gray-900">Options Interface</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="code-block bg-gray-900 rounded-lg overflow-hidden">
+                                    <div class="flex justify-between items-center px-4 py-3 bg-gray-800">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fab fa-typescript text-blue-400"></i>
+                                            <span class="text-gray-300 font-jetbrains text-sm">TypeScript</span>
+                                        </div>
+                                        <button class="copy-btn text-gray-400 hover:text-white" onclick="copyCode('interface-code')">
+                                            <i class="far fa-copy"></i>
+                                        </button>
+                                    </div>
+                                    <pre id="interface-code" class="language-typescript p-4 m-0 overflow-x-auto"><code class="language-typescript">interface RupiahFormatOptions {
+  // Basic Configuration
+  symbol?: string;                    // Currency symbol
+  decimalSeparator?: string;          // Decimal separator
+  thousandSeparator?: string;         // Thousand separator
+  precision?: number;                 // Decimal digits
+  
+  // Formatting Options
+  symbolPosition?: 'before' | 'after';
+  spaceBetween?: boolean;
+  stripTrailingZero?: boolean;
+  negativeFormat?: 'sign' | 'parentheses' | 'hidden';
+  formatStyle?: 'standard' | 'compact' | 'accounting';
+  hideZero?: boolean;
+  
+  // Localization
+  locale?: string;                    // 'id-ID', 'en-US', etc.
+  currencyCode?: string;              // 'IDR'
+  
+  // Fraction Control
+  minimumFractionDigits?: number;
+  maximumFractionDigits?: number;
+  
+  // Fallback
+  fallback?: string;                  // Fallback for zero/invalid
+  
+  // Preset (convenience)
+  preset?: keyof typeof PRESETS;      // Use built-in preset
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-xl font-semibold text-gray-900">Built-in Presets</h3>
+                            </div>
+                            <div class="p-6">
+                                <ul class="space-y-3">
+                                    <li class="flex items-center">
+                                        <div class="w-2 h-2 bg-primary-500 rounded-full mr-3"></div>
+                                        <span class="text-gray-700">standard</span>
+                                        <code class="ml-auto text-sm text-gray-500 font-jetbrains">"Rp 1.234,56"</code>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <div class="w-2 h-2 bg-secondary-500 rounded-full mr-3"></div>
+                                        <span class="text-gray-700">compact</span>
+                                        <code class="ml-auto text-sm text-gray-500 font-jetbrains">"Rp1.235"</code>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                                        <span class="text-gray-700">international</span>
+                                        <code class="ml-auto text-sm text-gray-500 font-jetbrains">"IDR 1,234.56"</code>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <div class="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
+                                        <span class="text-gray-700">ecommerce</span>
+                                        <code class="ml-auto text-sm text-gray-500 font-jetbrains">"Rp1.235"</code>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                                        <span class="text-gray-700">financial</span>
+                                        <code class="ml-auto text-sm text-gray-500 font-jetbrains">"Rp 1.234,56"</code>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <div class="w-2 h-2 bg-teal-500 rounded-full mr-3"></div>
+                                        <span class="text-gray-700">mobile</span>
+                                        <code class="ml-auto text-sm text-gray-500 font-jetbrains">"Rp1.235"</code>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <div class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></div>
+                                        <span class="text-gray-700">crypto</span>
+                                        <code class="ml-auto text-sm text-gray-500 font-jetbrains">"1,234.56"</code>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-xl font-semibold text-gray-900">React API</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-4">
+                                    <div>
+                                        <code class="text-sm font-jetbrains bg-gray-100 px-2 py-1 rounded">useRupiah()</code>
+                                        <p class="text-sm text-gray-600 mt-1">Main hook with full formatter</p>
+                                    </div>
+                                    <div>
+                                        <code class="text-sm font-jetbrains bg-gray-100 px-2 py-1 rounded">useRupiahFormat()</code>
+                                        <p class="text-sm text-gray-600 mt-1">Simple formatting hook</p>
+                                    </div>
+                                    <div>
+                                        <code class="text-sm font-jetbrains bg-gray-100 px-2 py-1 rounded">useRupiahState()</code>
+                                        <p class="text-sm text-gray-600 mt-1">State management hook</p>
+                                    </div>
+                                    <div>
+                                        <code class="text-sm font-jetbrains bg-gray-100 px-2 py-1 rounded">useRupiahInput()</code>
+                                        <p class="text-sm text-gray-600 mt-1">Input binding hook</p>
+                                    </div>
+                                    <div>
+                                        <code class="text-sm font-jetbrains bg-gray-100 px-2 py-1 rounded">RupiahDisplay</code>
+                                        <p class="text-sm text-gray-600 mt-1">Display component</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Changelog -->
+    <section id="changelog" class="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <span class="inline-block px-4 py-1 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-3">CHANGELOG</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Release History</h2>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-900">Version Updates</h3>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="space-y-8">
+                            <div class="changelog-item">
+                                <div class="bg-gradient-to-r from-primary-50 to-white p-6 rounded-xl border border-primary-100">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="px-3 py-1 bg-primary-600 text-white text-sm font-semibold rounded-full">v1.2.0</span>
+                                        <span class="text-sm text-gray-500">2025-12-24</span>
+                                    </div>
+                                    <ul class="space-y-2">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-primary-500 mt-1 mr-2"></i>
+                                            <span>Enhanced caching with configurable limits</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-primary-500 mt-1 mr-2"></i>
+                                            <span>Weak reference support for memory management</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-primary-500 mt-1 mr-2"></i>
+                                            <span>Improved parsing of mixed separator formats</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-primary-500 mt-1 mr-2"></i>
+                                            <span>Configurable warning suppression</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="changelog-item">
+                                <div class="bg-gradient-to-r from-secondary-50 to-white p-6 rounded-xl border border-secondary-100">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="px-3 py-1 bg-secondary-600 text-white text-sm font-semibold rounded-full">v1.1.0</span>
+                                        <span class="text-sm text-gray-500">2025-12-23</span>
+                                    </div>
+                                    <ul class="space-y-2">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-secondary-500 mt-1 mr-2"></i>
+                                            <span>Added new presets: ecommerce, financial, mobile, crypto</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-secondary-500 mt-1 mr-2"></i>
+                                            <span>Advanced features: abbreviation, percentage, growth calculations</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-secondary-500 mt-1 mr-2"></i>
+                                            <span>Range formatting and template-based formatting</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-secondary-500 mt-1 mr-2"></i>
+                                            <span>New React hooks: useRupiahState, useRupiahInput</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="changelog-item">
+                                <div class="bg-gradient-to-r from-gray-50 to-white p-6 rounded-xl border border-gray-200">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="px-3 py-1 bg-gray-600 text-white text-sm font-semibold rounded-full">v1.0.0</span>
+                                        <span class="text-sm text-gray-500">2025-12-15</span>
+                                    </div>
+                                    <ul class="space-y-2">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-gray-500 mt-1 mr-2"></i>
+                                            <span>Initial release with core formatting functionality</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-gray-500 mt-1 mr-2"></i>
+                                            <span>International locale support</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-gray-500 mt-1 mr-2"></i>
+                                            <span>React hooks and components</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-gray-500 mt-1 mr-2"></i>
+                                            <span>Zero dependencies and full test coverage</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-coins text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-xl font-bold">RupiahFormatter</div>
+                                <div class="text-sm text-gray-400">v1.2.0</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-4">The most comprehensive Rupiah formatting solution for modern web applications.</p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                            <li><a href="#quickstart" class="text-gray-400 hover:text-white transition-colors">Quick Start</a></li>
+                            <li><a href="#api" class="text-gray-400 hover:text-white transition-colors">API Reference</a></li>
+                            <li><a href="#demo" class="text-gray-400 hover:text-white transition-colors">Live Demo</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                        <ul class="space-y-2">
+                            <li><a href="https://github.com/devnovaa-id/new-rupiah-formatter" target="_blank" class="text-gray-400 hover:text-white transition-colors">GitHub Repository</a></li>
+                            <li><a href="https://www.npmjs.com/package/@devnovaa-id/new-rupiah-formatter" target="_blank" class="text-gray-400 hover:text-white transition-colors">npm Package</a></li>
+                            <li><a href="https://devnova.icu" target="_blank" class="text-gray-400 hover:text-white transition-colors">Developer Website</a></li>
+                            <li><a href="https://saweria.co/thisssskeyyyy" target="_blank" class="text-gray-400 hover:text-white transition-colors">Support Development</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Install Now</h4>
+                        <div class="code-block bg-gray-800 rounded-lg overflow-hidden">
+                            <pre class="text-sm font-jetbrains p-4 m-0">npm install @devnovaa-id/new-rupiah-formatter</pre>
+                        </div>
+                        <button onclick="copyFooterCode()" class="w-full mt-3 bg-gray-800 hover:bg-gray-700 py-2 rounded-lg font-medium transition-colors flex items-center justify-center">
+                            <i class="far fa-copy mr-2"></i> Copy Command
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-800 pt-8 mt-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="text-gray-400 mb-4 md:mb-0">
+                            © 2025 DevNova-ID. MIT Licensed.
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="https://github.com/devnovaa-id" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                            <a href="https://devnova.icu" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fas fa-globe text-xl"></i>
+                            </a>
+                            <a href="mailto:this.key@devnova.icu" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fas fa-envelope text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    
+    <script>
+        // Tab management
+        function changeTab(tabName) {
+            // Update active tab button
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-primary-600', 'text-gray-900');
+                btn.classList.add('text-gray-600');
+            });
+            
+            const targetTab = event.target.closest('.tab-btn');
+            targetTab.classList.add('active', 'border-primary-600', 'text-gray-900');
+            targetTab.classList.remove('text-gray-600');
+            
+            // Show selected tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+        }
+
+        // Copy code function
+        function copyCode(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const code = codeElement.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const button = event.target.closest('button');
+                if (button) {
+                    const originalHTML = button.innerHTML;
+                    button.innerHTML = '<i class="fas fa-check"></i>';
+                    button.classList.add('text-green-400');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('text-green-400');
+                    }, 2000);
+                }
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function copyFooterCode() {
+            const code = 'npm install @devnovaa-id/new-rupiah-formatter';
+            navigator.clipboard.writeText(code).then(() => {
+                const button = event.target;
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                }, 2000);
+            });
+        }
+
+        // Scroll to section
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Demo functionality
+        let cacheHits = 0;
+        let cacheMisses = 0;
+        const formatCache = new Map();
+
+        // Update precision value display
+        document.getElementById('demo-precision').addEventListener('input', function() {
+            document.getElementById('precision-value').textContent = this.value;
+        });
+
+        function formatNumberManual(num, options) {
+            const {
+                symbol = 'Rp',
+                decimalSeparator = ',',
+                thousandSeparator = '.',
+                precision = 2,
+                symbolPosition = 'before',
+                spaceBetween = true,
+                stripTrailingZero = true,
+                negativeFormat = 'sign',
+                hideZero = false,
+                fallback = 'Rp 0',
+                withAbbreviation = false,
+                isNegative = false
+            } = options;
+            
+            // Handle zero values
+            if (num === 0 && hideZero && fallback) {
+                return fallback;
+            }
+            
+            if (num === 0 && fallback) {
+                return fallback;
+            }
+            
+            // Format number
+            let formattedNum = Math.abs(num).toFixed(precision);
+            const [integer, decimal] = formattedNum.split('.');
+            
+            // Add thousand separators
+            let formattedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+            
+            // Handle decimal part
+            let formattedDecimal = decimal || '';
+            if (stripTrailingZero && decimal) {
+                formattedDecimal = decimal.replace(/0+$/, '');
+                if (formattedDecimal === '') {
+                    formattedDecimal = '';
+                }
+            }
+            
+            // Combine
+            let result = formattedInteger;
+            if (formattedDecimal) {
+                result += decimalSeparator + formattedDecimal;
+            }
+            
+            // Handle negative
+            if (isNegative) {
+                if (negativeFormat === 'parentheses') {
+                    result = `(${result})`;
+                } else if (negativeFormat === 'sign') {
+                    result = `-${result}`;
+                }
+            }
+            
+            // Add symbol
+            if (symbol) {
+                const space = spaceBetween ? ' ' : '';
+                if (symbolPosition === 'before') {
+                    result = `${symbol}${space}${result}`;
+                } else {
+                    result = `${result}${space}${symbol}`;
+                }
+            }
+            
+            return result;
+        }
+
+        function formatNumberWithCache(num, options) {
+            const cacheKey = `${num}_${JSON.stringify(options)}`;
+            
+            if (formatCache.has(cacheKey)) {
+                cacheHits++;
+                return formatCache.get(cacheKey);
+            }
+            
+            cacheMisses++;
+            const result = formatNumberManual(num, options);
+            
+            // Manage cache size
+            if (formatCache.size >= 100) {
+                const firstKey = Array.from(formatCache.keys())[0];
+                formatCache.delete(firstKey);
+            }
+            
+            formatCache.set(cacheKey, result);
+            
+            return result;
+        }
+
+        function updateMetrics() {
+            const total = cacheHits + cacheMisses;
+            const hitRate = total > 0 ? Math.round((cacheHits / total) * 100) : 0;
+            
+            document.getElementById('cache-hits').textContent = cacheHits;
+            document.getElementById('cache-misses').textContent = cacheMisses;
+            document.getElementById('cache-hit-rate').textContent = `${hitRate}%`;
+            document.getElementById('cache-size').textContent = formatCache.size;
+        }
+
+        function runDemo() {
+            const amount = parseFloat(document.getElementById('demo-amount').value) || 0;
+            const symbol = document.getElementById('demo-symbol').value;
+            const preset = document.getElementById('demo-preset').value;
+            const decimalSeparator = document.getElementById('demo-decimal').value;
+            const thousandSeparator = document.getElementById('demo-thousand').value;
+            const precision = parseInt(document.getElementById('demo-precision').value);
+            const spaceBetween = document.getElementById('demo-space').checked;
+            const stripTrailingZero = document.getElementById('demo-strip').checked;
+            const hideZero = document.getElementById('demo-hide-zero').checked;
+            const isNegative = document.getElementById('demo-negative').checked;
+            
+            // Preset configurations
+            const presets = {
+                standard: { stripTrailingZero: false, spaceBetween: true },
+                compact: { stripTrailingZero: true, spaceBetween: false },
+                international: { symbol: 'IDR', decimalSeparator: '.', thousandSeparator: ',' },
+                ecommerce: { stripTrailingZero: true, spaceBetween: false, fallback: 'Gratis' },
+                financial: { stripTrailingZero: false },
+                mobile: { stripTrailingZero: true, spaceBetween: false, precision: 0 },
+                crypto: { symbol: '', decimalSeparator: '.', thousandSeparator: ',', precision: 8 }
+            };
+            
+            const presetConfig = presets[preset] || {};
+            
+            const options = {
+                symbol: preset === 'international' ? 'IDR' : symbol,
+                decimalSeparator: preset === 'international' || preset === 'crypto' ? '.' : decimalSeparator,
+                thousandSeparator: preset === 'international' || preset === 'crypto' ? ',' : thousandSeparator,
+                precision,
+                spaceBetween,
+                stripTrailingZero,
+                hideZero,
+                isNegative,
+                fallback: hideZero ? 'Tidak ada nilai' : '0',
+                ...presetConfig
+            };
+            
+            const formatted = formatNumberWithCache(isNegative ? -Math.abs(amount) : amount, options);
+            document.getElementById('demo-output').textContent = formatted;
+            
+            // Generate code example
+            let code = `import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';\n\n`;
+            
+            if (preset !== 'standard') {
+                code += `// Using "${preset}" preset\n`;
+                code += `formatRupiah(${isNegative ? -Math.abs(amount) : amount}, { preset: '${preset}' });\n\n`;
+                code += `// Equivalent custom options:\n`;
+            }
+            
+            code += `formatRupiah(${isNegative ? -Math.abs(amount) : amount}, {\n`;
+            code += `  symbol: '${options.symbol}',\n`;
+            code += `  decimalSeparator: '${options.decimalSeparator}',\n`;
+            code += `  thousandSeparator: '${options.thousandSeparator}',\n`;
+            code += `  precision: ${options.precision},\n`;
+            code += `  spaceBetween: ${options.spaceBetween},\n`;
+            code += `  stripTrailingZero: ${options.stripTrailingZero}`;
+            if (options.hideZero) code += `,\n  hideZero: ${options.hideZero}`;
+            if (options.fallback !== 'Rp 0') code += `,\n  fallback: '${options.fallback}'`;
+            code += `\n});`;
+            
+            const demoCodeElement = document.getElementById('demo-code');
+            demoCodeElement.textContent = code;
+            Prism.highlightElement(demoCodeElement);
+            
+            updateMetrics();
+        }
+
+        function copyDemoCode() {
+            const code = document.getElementById('demo-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const button = event.target;
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                }, 2000);
+            });
+        }
+
+        function loadExample(type) {
+            let amount = 1234567.89;
+            let code = '';
+            
+            switch(type) {
+                case 'abbreviation':
+                    code = `import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';\n\n`;
+                    code += `// Format with abbreviation\n`;
+                    code += `formatRupiah(${amount}, { withAbbreviation: true });\n\n`;
+                    code += `// Or using the dedicated function:\n`;
+                    code += `import { formatRupiahWithAbbreviation } from '@devnovaa-id/new-rupiah-formatter';\n`;
+                    code += `formatRupiahWithAbbreviation(${amount});`;
+                    break;
+                    
+                case 'range':
+                    code = `import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';\n\n`;
+                    code += `// Format a range\n`;
+                    code += `formatRupiah(1000, { \n`;
+                    code += `  range: [1000, 5000],\n`;
+                    code += `  rangeSeparator: ' - '\n`;
+                    code += `});\n\n`;
+                    code += `// Or using the dedicated function:\n`;
+                    code += `import { formatRupiahRange } from '@devnovaa-id/new-rupiah-formatter';\n`;
+                    code += `formatRupiahRange(1000, 5000);`;
+                    break;
+                    
+                case 'percentage':
+                    code = `import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';\n\n`;
+                    code += `// Format with percentage\n`;
+                    code += `formatRupiah(750, { \n`;
+                    code += `  withPercentage: {\n`;
+                    code += `    total: 1500,\n`;
+                    code += `    customOptions: { symbol: '' }\n`;
+                    code += `  }\n`;
+                    code += `});\n\n`;
+                    code += `// Using RupiahFormatter class:\n`;
+                    code += `import { RupiahFormatter } from '@devnovaa-id/new-rupiah-formatter';\n`;
+                    code += `const formatter = new RupiahFormatter();\n`;
+                    code += `formatter.calculatePercentage(750, 1500);`;
+                    break;
+                    
+                case 'growth':
+                    code = `import { formatRupiah } from '@devnovaa-id/new-rupiah-formatter';\n\n`;
+                    code += `// Format growth calculation\n`;
+                    code += `formatRupiah(1500, { \n`;
+                    code += `  withGrowth: {\n`;
+                    code += `    oldValue: 1000,\n`;
+                    code += `    showArrow: true\n`;
+                    code += `  }\n`;
+                    code += `});\n\n`;
+                    code += `// Using RupiahFormatter class:\n`;
+                    code += `import { RupiahFormatter } from '@devnovaa-id/new-rupiah-formatter';\n`;
+                    code += `const formatter = new RupiahFormatter();\n`;
+                    code += `formatter.calculateGrowth(1000, 1500);`;
+                    break;
+            }
+            
+            const demoCodeElement = document.getElementById('demo-code');
+            demoCodeElement.textContent = code;
+            Prism.highlightElement(demoCodeElement);
+            
+            updateMetrics();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize demo
+            runDemo();
+            
+            // Highlight all code blocks
+            document.querySelectorAll('pre code').forEach((block) => {
+                Prism.highlightElement(block);
+            });
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#') {
+                        e.preventDefault();
+                        const sectionId = href.substring(1);
+                        scrollToSection(sectionId);
+                    }
+                });
+            });
+            
+            // Initialize metrics
+            updateMetrics();
+            
+            // Add intersection observer for fade-in animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.feature-card, .code-block').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

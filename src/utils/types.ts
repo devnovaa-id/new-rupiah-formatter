@@ -1,17 +1,23 @@
+export type SymbolPosition = 'before' | 'after';
+export type NegativeFormat = 'sign' | 'parentheses' | 'hidden';
+export type FormatStyle = 'standard' | 'compact' | 'accounting';
+
 export interface RupiahFormatOptions {
   symbol?: string;
   decimalSeparator?: string;
   thousandSeparator?: string;
   precision?: number;
-  symbolPosition?: 'before' | 'after';
+  symbolPosition?: SymbolPosition;
   spaceBetween?: boolean;
   stripTrailingZero?: boolean;
-  negativeFormat?: 'sign' | 'parentheses';
+  negativeFormat?: NegativeFormat;
   fallback?: string;
   locale?: string;
   currencyCode?: string;
   minimumFractionDigits?: number;
   maximumFractionDigits?: number;
+  formatStyle?: FormatStyle;
+  hideZero?: boolean;
 }
 
 export interface ParsedRupiah {
@@ -33,6 +39,13 @@ export interface CurrencyLocale {
 export interface RupiahFormatterConfig extends RupiahFormatOptions {
   alias?: string;
   presets?: Record<string, Partial<RupiahFormatOptions>>;
+}
+
+export interface SeparatorPattern {
+  thousand: string;
+  decimal: string;
+  symbol: string;
+  space: boolean;
 }
 
 export type InputValue = number | string | bigint;

@@ -1,7 +1,7 @@
 {
   "name": "@devnovaa-id/new-rupiah-formatter",
-  "version": "1.0.0",
-  "description": "A flexible, customizable Rupiah formatter library with international support",
+  "version": "1.2.0",
+  "description": "A flexible, customizable Rupiah formatter library with international support - Enhanced with new features and stability improvements",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -18,15 +18,19 @@
     }
   },
   "scripts": {
-    "build": "npm run clean && npm run build:cjs && npm run build:esm",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:react",
     "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir dist",
-    "build:esm": "tsc -p tsconfig.build.json --module esnext --outDir dist/esm",
-    "clean": "rm -rf dist",
-    "test": "jest",
+    "build:esm": "tsc -p tsconfig.build.json --module esnext --outDir dist/esm && cp dist/esm/index.js dist/index.esm.js",
+    "build:react": "tsc -p tsconfig.react.json --module esnext --outDir dist/react && cp dist/react/react/index.js dist/react/index.esm.js",
+    "clean": "rm -rf dist coverage",
+    "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "lint": "eslint src/**/*.ts",
-    "prepublishOnly": "npm run build && npm test"
+    "test:coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
+    "lint": "eslint src/**/*.ts --max-warnings 5",
+    "lint:fix": "eslint src/**/*.ts --fix --max-warnings 5",
+    "type-check": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.react.json",
+    "prepublishOnly": "npm run type-check && npm run test && npm run build",
+    "prebuild": "npm run type-check && npm run lint"
   },
   "keywords": [
     "rupiah",
@@ -38,7 +42,12 @@
     "international",
     "react",
     "vue",
-    "angular"
+    "angular",
+    "typescript",
+    "customizable",
+    "flexible",
+    "validation",
+    "error-handling"
   ],
   "author": "this key <this.key@devnova.icu>",
   "license": "MIT",

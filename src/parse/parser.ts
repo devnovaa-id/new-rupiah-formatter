@@ -1,5 +1,6 @@
 import { ParsedRupiah } from '../utils/types';
 import { getLocaleConfig } from '../utils/locale';
+import { toNumber } from '../utils/helpers';
 
 export class RupiahParser {
   static parse(formattedString: string, locale: string = 'id-ID'): ParsedRupiah {
@@ -15,33 +16,8 @@ export class RupiahParser {
     );
     cleaned = cleaned.replace(symbolRegex, '');
     
-    // Remove thousand separators
-    cleaned = cleaned.replace(
-      new RegExp(`\\${localeConfig.thousandSeparator}`, 'g'),
-      ''
-    );
-    
-    // Replace decimal separator with dot
-    cleaned = cleaned.replace(
-      new RegExp(`\\${localeConfig.decimalSeparator}`, 'g'),
-      '.'
-    );
-    
-    // Remove any non-numeric characters except dot and minus
-    cleaned = cleaned.replace(/[^\d.-]/g, '');
-    
-    // Check if cleaned is empty or invalid
-    if (!cleaned || cleaned === '-' || cleaned === '.') {
-      return {
-        raw: formattedString,
-        numeric: 0,
-        isValid: false,
-        currency: localeConfig.currency,
-        locale: localeConfig.locale
-      };
-    }
-    
-    const numeric = parseFloat(cleaned);
+    // For parsing, we just use the toNumber function which handles all formats
+    const numeric = toNumber(cleaned);
     const isValid = !isNaN(numeric) && isFinite(numeric);
     
     return {
@@ -76,6 +52,11 @@ export class RupiahParser {
       /^(IDR\s*)?-?\s*\d{1,3}(,\d{3})*(\.\d{1,2})?$/,
       // Rp1.000 (no space)
       /^Rp-?\d{1,3}(\.\d{3})*(,\d{1,2})?$/,
+      // Plain numbers
+      /^-?\d{1,3}(\.\d{3})*(,\d{1,2})?$/,
+      /^-?\d{1,3}(,\d{3})*(\.\d{1,2})?$/,
+      /^-?\d+(\.\d{1,2})?$/,
+      /^-?\d+(,\d{1,2})?$/
     ];
     
     // Check against patterns

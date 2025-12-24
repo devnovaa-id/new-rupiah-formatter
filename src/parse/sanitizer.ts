@@ -1,5 +1,5 @@
 export class RupiahSanitizer {
-  static sanitizeInput(input: any): string {
+  static sanitizeInput(input: unknown): string {
     if (input == null) return '0';
     
     if (typeof input === 'number') {

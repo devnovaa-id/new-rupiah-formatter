@@ -1,10 +1,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "declaration": true,
     "declarationDir": "./dist/types",
     "outDir": "./dist",
     "jsx": "preserve"
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "tests", 
     "examples", 
