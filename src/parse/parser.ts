@@ -44,18 +44,27 @@ export class RupiahParser {
     // Check if it contains at least one digit
     if (!/\d/.test(trimmed)) return false;
     
-    // Common Rupiah patterns
+    // Common Rupiah patterns - Diperbarui untuk menangani minus sebelum simbol
     const rupiahPatterns = [
-      // Rp 1.000, Rp 1.000,00, Rp -1.000
-      /^(Rp\s*)?-?\s*\d{1,3}(\.\d{3})*(,\d{1,2})?$/,
-      // IDR 1,000.00
-      /^(IDR\s*)?-?\s*\d{1,3}(,\d{3})*(\.\d{1,2})?$/,
-      // Rp1.000 (no space)
+      // Minus sebelum Rp dengan spasi
+      /^-?\s*Rp\s*\d{1,3}(\.\d{3})*(,\d{1,2})?$/,
+      // Minus sebelum IDR dengan spasi
+      /^-?\s*IDR\s*\d{1,3}(,\d{3})*(\.\d{1,2})?$/,
+      // Rp tanpa spasi, dengan minus setelah Rp
       /^Rp-?\d{1,3}(\.\d{3})*(,\d{1,2})?$/,
-      // Plain numbers
+      // IDR tanpa spasi, dengan minus setelah IDR
+      /^IDR-?\d{1,3}(,\d{3})*(\.\d{1,2})?$/,
+      // Rp dengan spasi, minus optional setelah spasi (dan juga tanpa minus)
+      /^(Rp\s*)?-?\s*\d{1,3}(\.\d{3})*(,\d{1,2})?$/,
+      // IDR dengan spasi, minus optional setelah spasi (dan juga tanpa minus)
+      /^(IDR\s*)?-?\s*\d{1,3}(,\d{3})*(\.\d{1,2})?$/,
+      // Format Indonesia tanpa simbol
       /^-?\d{1,3}(\.\d{3})*(,\d{1,2})?$/,
+      // Format Internasional tanpa simbol
       /^-?\d{1,3}(,\d{3})*(\.\d{1,2})?$/,
+      // Format desimal dengan titik
       /^-?\d+(\.\d{1,2})?$/,
+      // Format desimal dengan koma
       /^-?\d+(,\d{1,2})?$/
     ];
     

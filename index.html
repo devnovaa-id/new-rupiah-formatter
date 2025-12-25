@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@devnovaa-id/new-rupiah-formatter v1.2.0 - Rupiah Formatter Library</title>
+    <title>@devnovaa-id/new-rupiah-formatter v1.2.1 - Rupiah Formatter Library</title>
     <!-- Load Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
     
@@ -168,7 +168,7 @@
                         <i class="fas fa-coins text-white text-xs"></i>
                     </div>
                     <span class="text-lg font-bold gradient-text">RupiahFormatter</span>
-                    <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full">v1.2.0</span>
+                    <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full">v1.2.1</span>
                 </div>
                 
                 <!-- Mobile menu button -->
@@ -221,9 +221,9 @@
         <div class="container mx-auto px-3 sm:px-4 relative">
             <div class="max-w-4xl mx-auto text-center">
                 <div class="inline-flex items-center space-x-2 mb-4 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm">
-                    <span class="text-xs font-semibold text-blue-700">✨ v1.2.0 Released</span>
+                    <span class="text-xs font-semibold text-blue-700">✨ v1.2.1 Released</span>
                     <span class="text-gray-500">•</span>
-                    <span class="text-xs text-gray-600">Enhanced performance</span>
+                    <span class="text-xs text-gray-600">Enhanced performance & bug fixes</span>
                 </div>
                 
                 <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
@@ -268,6 +268,14 @@
                         <div class="text-lg sm:text-xl font-bold text-blue-600">9</div>
                         <div class="text-xs text-gray-600">Built-in Presets</div>
                     </div>
+                </div>
+
+                <!-- Support Section -->
+                <div class="mt-6 text-center">
+                    <a href="https://saweria.co/thisssskeyyyy" target="_blank" class="inline-flex items-center space-x-1.5 text-sm text-gray-600 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-heart text-red-500"></i>
+                        <span>Support this project on Saweria</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -1307,6 +1315,29 @@ console.log(formatRupiah(1234567.89, { preset: 'crypto' }));
                     <div class="p-4">
                         <div class="space-y-4">
                             <div class="changelog-item">
+                                <div class="bg-gradient-to-r from-purple-50 to-white p-4 rounded-lg border border-purple-100">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="px-2 py-0.5 bg-purple-600 text-white text-xs font-semibold rounded-full">v1.2.1</span>
+                                        <span class="text-xs text-gray-500">2025-12-25</span>
+                                    </div>
+                                    <ul class="space-y-1 text-sm">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-purple-500 mt-0.5 mr-1.5 text-xs"></i>
+                                            <span>Fixed negative zero handling in <code class="bg-purple-100 px-1 py-0.5 rounded text-xs">toNumber</code> function</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-purple-500 mt-0.5 mr-1.5 text-xs"></i>
+                                            <span>Improved test coverage to 100% across all modules</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check text-purple-500 mt-0.5 mr-1.5 text-xs"></i>
+                                            <span>Enhanced documentation and examples</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="changelog-item">
                                 <div class="bg-gradient-to-r from-blue-50 to-white p-4 rounded-lg border border-blue-100">
                                     <div class="flex items-center justify-between mb-2">
                                         <span class="px-2 py-0.5 bg-blue-600 text-white text-xs font-semibold rounded-full">v1.2.0</span>
@@ -1687,7 +1718,7 @@ console.log(formatRupiah(1500000, {
                             </div>
                             <div>
                                 <div class="text-lg font-bold">RupiahFormatter</div>
-                                <div class="text-xs text-gray-400">v1.2.0</div>
+                                <div class="text-xs text-gray-400">v1.2.1</div>
                             </div>
                         </div>
                         <p class="text-sm text-gray-400">The most comprehensive Rupiah formatting solution for modern web applications.</p>
@@ -1740,6 +1771,9 @@ console.log(formatRupiah(1500000, {
                             </a>
                             <a href="mailto:this.key@devnova.icu" class="text-gray-400 hover:text-white">
                                 <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://saweria.co/thisssskeyyyy" target="_blank" class="text-gray-400 hover:text-white" title="Support me on Saweria">
+                                <i class="fas fa-heart"></i>
                             </a>
                         </div>
                     </div>

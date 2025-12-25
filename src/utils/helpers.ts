@@ -13,22 +13,19 @@ export const isNumeric = (value: unknown): boolean => {
 };
 
 export const toNumber = (value: InputValue): number => {
+  let num: number;
   if (typeof value === 'number') {
-    return isNaN(value) || !isFinite(value) ? 0 : value;
+    num = isNaN(value) || !isFinite(value) ? 0 : value;
+  } else if (typeof value === 'bigint') {
+    num = Number(value);
+  } else if (typeof value === 'string') {
+    num = parseRupiahString(value);
+  } else {
+    num = Number(value);
+    num = isNaN(num) ? 0 : num;
   }
-  
-  if (typeof value === 'bigint') {
-    return Number(value);
-  }
-  
-  if (typeof value === 'string') {
-    // Fungsi khusus untuk parsing string Rupiah
-    return parseRupiahString(value);
-  }
-  
-  // Try to convert any other type to number
-  const num = Number(value);
-  return isNaN(num) ? 0 : num;
+  // Normalisasi -0 menjadi 0
+  return num === 0 ? 0 : num;
 };
 
 // Helper function khusus untuk parsing string Rupiah
@@ -152,6 +149,11 @@ export const formatNumber = (
   minimumFractionDigits: number = 0
 ): string => {
   try {
+    // TAMBAHKAN: Handle NaN dan Infinity
+    if (typeof num !== 'number' || !isFinite(num)) {
+      return '0';
+    }
+    
     const fixedNum = Math.abs(num).toFixed(precision);
     const [integer, decimal] = fixedNum.split('.');
     
@@ -167,7 +169,7 @@ export const formatNumber = (
     
     let formattedDecimal = decimal || '';
     if (minimumFractionDigits > 0) {
-      formattedDecimal = (decimal || '').padEnd(minimumFractionDigits, '0');
+      formattedDecimal = formattedDecimal.padEnd(minimumFractionDigits, '0');
     }
     
     return `${formattedInteger}${decimalSeparator}${formattedDecimal}`;

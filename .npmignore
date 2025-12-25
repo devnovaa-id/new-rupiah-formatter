@@ -19,6 +19,7 @@ tsconfig.react.json
 backup.ts
 index.html
 project-backup.md
+CNAME
 .eslintrc.js
 jest.config.js
 biome.json
