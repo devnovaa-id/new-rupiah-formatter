@@ -1,0 +1,13 @@
+/**
+ * Core Types for Rupiah Formatter
+ */
+export const ERROR_CODES = {
+    INVALID_INPUT: 'INVALID_INPUT',
+    OVERFLOW: 'OVERFLOW',
+    UNDERFLOW: 'UNDERFLOW',
+    INVALID_FORMAT: 'INVALID_FORMAT',
+    OPTIONS_ERROR: 'OPTIONS_ERROR',
+    PLUGIN_ERROR: 'PLUGIN_ERROR',
+    PARSING_ERROR: 'PARSING_ERROR'
+};
+//# sourceMappingURL=types.js.map

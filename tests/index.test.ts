@@ -1,299 +1,333 @@
-// tests/index.test.ts
-import Rupiah, {
+/**
+ * Comprehensive tests for Rupiah Formatter v3.0.0
+ */
+
+import {
   formatRupiah,
-  RupiahFormatter,
   parseRupiah,
+  validateRupiah,
   isValidRupiah,
-  BI_STANDARD,
-  FORMAT_PRESETS,
-  FormatOptions
+  createFormatter,
+  RupiahFormatter,
+  PRESETS,
+  toNumber,
+  roundNumber,
+  formatWithSeparators
 } from '../src/index';
+import { CachePlugin, CompactPlugin, WordsPlugin } from '../src/plugins';
 
-describe('Rupiah Formatter Library - Comprehensive Tests', () => {
-  // ============================================
-  // 1. Test formatRupiah function (main export)
-  // ============================================
-  describe('formatRupiah function', () => {
-    test('should format positive numbers with default options', () => {
+describe('Rupiah Formatter v3.0.0', () => {
+  describe('Core Functionality', () => {
+    test('formatRupiah with default options', () => {
       expect(formatRupiah(1000)).toBe('Rp1.000,00');
-      expect(formatRupiah(1234567)).toBe('Rp1.234.567,00');
-      expect(formatRupiah(1234.56)).toBe('Rp1.234,56');
+      expect(formatRupiah(1234567.89)).toBe('Rp1.234.567,89');
+      // Tanda minus di depan simbol
+      expect(formatRupiah(-5000)).toBe('-Rp5.000,00');
     });
-
-    test('should format negative numbers with default options', () => {
-      expect(formatRupiah(-1000)).toBe('-Rp1.000,00');
-      expect(formatRupiah(-1234.56)).toBe('-Rp1.234,56');
+    
+    test('formatRupiah with preset', () => {
+      expect(formatRupiah(1234567.89, 'ECOMMERCE')).toBe('Rp1.234.568');
+      // Tanda kurung membungkus simbol dan angka
+      expect(formatRupiah(-5000, 'ACCOUNTING')).toBe('(Rp5.000,00)');
+      expect(formatRupiah(1234567.89, 'FINANCIAL')).toBe('IDR 1,234,567.89');
     });
-
-    test('should handle string inputs', () => {
-      expect(formatRupiah('1000')).toBe('Rp1.000,00');
-      // String dengan koma desimal sesuai format Indonesia
-      expect(formatRupiah('1234,56')).toBe('Rp1.234,56');
-      expect(formatRupiah('-500')).toBe('-Rp500,00');
+    
+    test('parseRupiah', () => {
+      expect(parseRupiah('Rp1.000,00')).toBe(1000);
+      expect(parseRupiah('Rp1.234.567,89')).toBe(1234567.89);
+      expect(parseRupiah('-Rp5.000,00')).toBe(-5000);
+      expect(parseRupiah('(Rp5.000,00)')).toBe(-5000);
     });
-
-    test('should return fallback for zero/invalid values', () => {
-      expect(formatRupiah(0)).toBe('Rp0');
-      expect(formatRupiah(NaN)).toBe('Rp0');
-      expect(formatRupiah(Infinity)).toBe('Rp0');
-      expect(formatRupiah('invalid')).toBe('Rp0');
+    
+    test('validateRupiah', () => {
+      expect(validateRupiah(1000).isValid).toBe(true);
+      expect(validateRupiah('invalid').isValid).toBe(false);
+      expect(validateRupiah(null).isValid).toBe(false);
     });
-
-    test('should respect custom options', () => {
-      const options: FormatOptions = {
-        symbol: 'IDR',
-        thousandSeparator: ',',
-        decimalSeparator: '.',
-        spaceBetween: true,
-        precision: 3
-      };
-      expect(formatRupiah(1234567.89, options)).toBe('IDR 1,234,567.890');
-    });
-  });
-
-  // ============================================
-  // 2. Test RupiahFormatter class
-  // ============================================
-  describe('RupiahFormatter class', () => {
-    let formatter: RupiahFormatter;
-
-    beforeEach(() => {
-      formatter = new RupiahFormatter();
-    });
-
-    test('should format with default settings', () => {
-      expect(formatter.format(1234567)).toBe('Rp1.234.567,00');
-      expect(formatter.format(1234.56)).toBe('Rp1.234,56');
-    });
-
-    test('should parse formatted strings', () => {
-      expect(formatter.parse('Rp1.234.567')).toBe(1234567);
-      expect(formatter.parse('Rp1.234,56')).toBe(1234.56);
-      expect(formatter.parse('-Rp500')).toBe(-500);
-    });
-
-    test('should format range', () => {
-      expect(formatter.formatRange(1000, 2000)).toBe('Rp1.000,00 - Rp2.000,00');
-      expect(formatter.formatRange('500', '1500', ' sampai ')).toBe('Rp500,00 sampai Rp1.500,00');
-    });
-
-    test('should handle negative formats', () => {
-      const accountingFormatter = new RupiahFormatter({
-        negativeFormat: 'parentheses'
-      });
-      expect(accountingFormatter.format(-1000)).toBe('Rp(1.000,00)');
-    });
-
-    test('should validate options', () => {
-      expect(() => new RupiahFormatter({
-        decimalSeparator: '.',
-        thousandSeparator: '.' // Same as decimal separator
-      })).toThrow('Decimal and thousand separators cannot be the same');
-
-      expect(() => new RupiahFormatter({
-        precision: -1
-      })).toThrow('Precision must be between 0 and 20');
-
-      expect(() => new RupiahFormatter({
-        precision: 21
-      })).toThrow('Precision must be between 0 and 20');
-    });
-
-    test('static format method should work', () => {
-      expect(RupiahFormatter.format(1234567)).toBe('Rp1.234.567,00');
-      expect(RupiahFormatter.format(1234.56, { precision: 0 })).toBe('Rp1.235');
-    });
-
-    test('static parse method should work', () => {
-      expect(RupiahFormatter.parse('Rp1.234.567')).toBe(1234567);
-      expect(RupiahFormatter.parse('Rp1.234,56')).toBe(1234.56);
-    });
-  });
-
-  // ============================================
-  // 3. Test parser functions
-  // ============================================
-  describe('Parser functions', () => {
-    test('parseRupiah should parse valid strings', () => {
-      expect(parseRupiah('Rp1.234.567')).toBe(1234567);
-      expect(parseRupiah('Rp1.234,56')).toBe(1234.56);
-      expect(parseRupiah('-Rp500')).toBe(-500);
-      // Catatan: parseRupiah hanya mendeteksi format dengan simbol Rp
-      // expect(parseRupiah('IDR 1,234.56')).toBe(1234.56);
-    });
-
-    test('parseRupiah should return 0 for invalid inputs', () => {
-      expect(parseRupiah('')).toBe(0);
-      expect(parseRupiah('invalid')).toBe(0);
-      expect(parseRupiah(null as any)).toBe(0);
-      expect(parseRupiah(undefined as any)).toBe(0);
-    });
-
-    test('isValidRupiah should validate BI standard format', () => {
-      expect(isValidRupiah('Rp1.234.567')).toBe(true);
-      expect(isValidRupiah('Rp1.234,56')).toBe(true);
-      expect(isValidRupiah('-Rp500')).toBe(true);
-      expect(isValidRupiah('Rp0')).toBe(true);
-      
-      expect(isValidRupiah('1.234.567')).toBe(false);
-      expect(isValidRupiah('IDR 1,234.56')).toBe(false);
+    
+    test('isValidRupiah', () => {
+      expect(isValidRupiah('Rp1.000,00')).toBe(true);
+      expect(isValidRupiah('Rp 1.000,00')).toBe(true);
       expect(isValidRupiah('invalid')).toBe(false);
     });
-  });
-
-  // ============================================
-  // 4. Test constants and presets
-  // ============================================
-  describe('Constants and presets', () => {
-    test('BI_STANDARD should have correct values', () => {
-      expect(BI_STANDARD.symbol).toBe('Rp');
-      expect(BI_STANDARD.decimalSeparator).toBe(',');
-      expect(BI_STANDARD.thousandSeparator).toBe('.');
-      expect(BI_STANDARD.symbolPosition).toBe('before');
-      expect(BI_STANDARD.precision).toBe(2);
-      expect(BI_STANDARD.stripTrailingZero).toBe(false);
-      expect(BI_STANDARD.spaceBetween).toBe(false);
-    });
-
-    test('FORMAT_PRESETS should work correctly', () => {
-      // STANDARD preset
-      expect(formatRupiah(1234.56, FORMAT_PRESETS.STANDARD)).toBe('Rp1.234,56');
-      
-      // NO_DECIMAL preset
-      expect(formatRupiah(1234.56, FORMAT_PRESETS.NO_DECIMAL)).toBe('Rp1.235');
-      expect(formatRupiah(1234.00, FORMAT_PRESETS.NO_DECIMAL)).toBe('Rp1.234');
-      
-      // COMPACT preset
-      expect(formatRupiah(1234567, FORMAT_PRESETS.COMPACT)).toBe('Rp1.234.567');
-      
-      // ACCOUNTING preset
-      expect(formatRupiah(-1234.56, FORMAT_PRESETS.ACCOUNTING)).toBe('Rp(1.234,56)');
+    
+    test('formatRupiah negative formats', () => {
+      expect(formatRupiah(-5000, { negativeFormat: 'sign' })).toBe('-Rp5.000,00');
+      expect(formatRupiah(-5000, { negativeFormat: 'parentheses' })).toBe('(Rp5.000,00)');
+      expect(formatRupiah(-5000, { negativeFormat: 'braces' })).toBe('[Rp5.000,00]');
+      expect(formatRupiah(-5000, { negativeFormat: 'none' })).toBe('Rp5.000,00');
     });
   });
-
-  // ============================================
-  // 5. Test default export (Rupiah object)
-  // ============================================
-  describe('Default export (Rupiah object)', () => {
-    test('should have all expected methods and properties', () => {
-      expect(typeof Rupiah.format).toBe('function');
-      expect(typeof Rupiah.parse).toBe('function');
-      expect(typeof Rupiah.isValid).toBe('function');
-      expect(typeof Rupiah.Formatter).toBe('function');
-      expect(Rupiah.STANDARD).toBe(BI_STANDARD);
-      expect(Rupiah.PRESETS).toBe(FORMAT_PRESETS);
+  
+  describe('AdvancedRupiahFormatter', () => {
+    let formatter: RupiahFormatter;
+    
+    beforeEach(() => {
+      formatter = createFormatter({}, []); // No plugins
+      // Reset to default options
+      formatter.setOptions({ ...PRESETS.BI_STANDARD });
     });
-
-    test('methods should work correctly', () => {
-      expect(Rupiah.format(1234567)).toBe('Rp1.234.567,00');
-      expect(Rupiah.parse('Rp1.234.567')).toBe(1234567);
-      expect(Rupiah.isValid('Rp1.234.567')).toBe(true);
-      expect(new Rupiah.Formatter().format(1234567)).toBe('Rp1.234.567,00');
-    });
-  });
-
-  // ============================================
-  // 6. Edge cases and special scenarios
-  // ============================================
-  describe('Edge cases and special scenarios', () => {
-    test('should handle very large numbers', () => {
-      expect(formatRupiah(999999999999.99)).toBe('Rp999.999.999.999,99');
-      expect(formatRupiah(-999999999999.99)).toBe('-Rp999.999.999.999,99');
-    });
-
-    test('should handle very small numbers', () => {
-      expect(formatRupiah(0.01)).toBe('Rp0,01');
-      expect(formatRupiah(0.005)).toBe('Rp0,01'); // Pembulatan
-      expect(formatRupiah(0.004)).toBe('Rp0,00');
-    });
-
-    test('should handle different precisions', () => {
-      expect(formatRupiah(1234.5678, { precision: 0 })).toBe('Rp1.235');
-      expect(formatRupiah(1234.5678, { precision: 1 })).toBe('Rp1.234,6');
-      expect(formatRupiah(1234.5678, { precision: 3 })).toBe('Rp1.234,568');
-      expect(formatRupiah(1234.5678, { precision: 4 })).toBe('Rp1.234,5678');
-    });
-
-    test('should handle symbol after number', () => {
-      const options: FormatOptions = {
-        symbolPosition: 'after',
-        spaceBetween: true
-      };
-      expect(formatRupiah(1234567, options)).toBe('1.234.567,00 Rp');
-      expect(formatRupiah(-1234567, options)).toBe('-1.234.567,00 Rp');
-    });
-
-    test('should handle different separators', () => {
-      const options: FormatOptions = {
-        thousandSeparator: ',',
-        decimalSeparator: '.',
-        spaceBetween: true
-      };
-      expect(formatRupiah(1234567.89, options)).toBe('Rp 1,234,567.89');
-    });
-
-    test('should handle no symbol', () => {
-      const options: FormatOptions = {
-        symbol: '',
-        spaceBetween: false
-      };
-      expect(formatRupiah(1234567, options)).toBe('1.234.567,00');
-    });
-
-    test('should handle empty/undefined/null inputs gracefully', () => {
-      expect(formatRupiah('')).toBe('Rp0');
-      expect(formatRupiah(null as any)).toBe('Rp0');
-      expect(formatRupiah(undefined as any)).toBe('Rp0');
-    });
-
-    test('should handle scientific notation for numbers', () => {
-      expect(formatRupiah(1.23e6)).toBe('Rp1.230.000,00');
-      // Catatan: scientific notation string tidak didukung
-    });
-  });
-
-  // ============================================
-  // 7. Integration tests
-  // ============================================
-  describe('Integration tests', () => {
-    test('format -> parse roundtrip', () => {
-      const testValues = [1234567, 1234.56, -500, 0.01, 999999999.99];
+    
+    test('format with different options', () => {
+      formatter.setOptions({ precision: 0 });
+      expect(formatter.format(1234.56)).toBe('Rp1.235');
       
-      testValues.forEach(value => {
-        const formatted = formatRupiah(value);
-        const parsed = parseRupiah(formatted);
-        expect(parsed).toBeCloseTo(value, 2);
-      });
-    });
-
-    test('Formatter instance format -> parse roundtrip', () => {
-      const formatter = new RupiahFormatter();
-      const testValues = [1234567, 1234.56, -500];
+      formatter.setOptions({ spaceBetween: true });
+      expect(formatter.format(1000)).toBe('Rp 1.000');
       
-      testValues.forEach(value => {
-        const formatted = formatter.format(value);
-        const parsed = formatter.parse(formatted);
-        expect(parsed).toBeCloseTo(value, 2);
-      });
-    });
-
-    test('custom formatter with different options', () => {
-      const customFormatter = new RupiahFormatter({
-        symbol: 'IDR',
-        thousandSeparator: ',',
+      formatter.setOptions({ 
+        symbol: 'IDR', 
+        thousandSeparator: ',', 
         decimalSeparator: '.',
         spaceBetween: true,
-        precision: 3,
-        negativeFormat: 'parentheses'
+        precision: 2  // Reset precision ke 2
       });
-
-      expect(customFormatter.format(1234567.89)).toBe('IDR 1,234,567.890');
-      expect(customFormatter.format(-1234567.89)).toBe('IDR (1,234,567.890)');
+      const result = formatter.format(1234567);
+      expect(result).toBe('IDR 1,234,567.00');
+    });
+    
+    test('formatRange', () => {
+      expect(formatter.formatRange(1000, 5000)).toBe('Rp1.000,00 - Rp5.000,00');
+      expect(formatter.formatRange(1000, 5000, ' s/d ')).toBe('Rp1.000,00 s/d Rp5.000,00');
+    });
+    
+    test('formatList', () => {
+      expect(formatter.formatList([1000, 2000, 3000])).toBe('Rp1.000,00, Rp2.000,00 dan Rp3.000,00');
+      expect(formatter.formatList([1000])).toBe('Rp1.000,00');
+    });
+    
+    test('batchFormat', () => {
+      const values = [1000, 2000, 3000, 4000, 5000];
+      const results = formatter.batchFormat(values);
       
-      // Parse what was formatted
-      const formatted = customFormatter.format(1234567.89);
-      const parsed = customFormatter.parse(formatted);
-      expect(parsed).toBeCloseTo(1234567.89, 3);
+      expect(results).toHaveLength(5);
+      expect(results[0]).toBe('Rp1.000,00');
+      expect(results[4]).toBe('Rp5.000,00');
+    });
+    
+    test('analyze', () => {
+      const analysis = formatter.analyze(1234567.89);
+      
+      expect(analysis.parsed).toBe(1234567.89);
+      expect(analysis.formatted).toBe('Rp1.234.567,89');
+      expect(analysis.isValid).toBe(true);
+      expect(analysis.isInteger).toBe(false);
+      expect(analysis.magnitude).toBe('million');
+    });
+  });
+  
+  describe('Plugins', () => {
+    test('CachePlugin', () => {
+      const formatter = createFormatter(PRESETS.BI_STANDARD, ['cache']);
+      
+      // First call should compute
+      const result1 = formatter.format(1000);
+      
+      // Second call should use cache
+      const result2 = formatter.format(1000);
+      
+      expect(result1).toBe(result2);
+      expect(result1).toBe('Rp1.000,00');
+      
+      // Check cache stats
+      const stats = (formatter as any).cacheStats();
+      expect(stats.size).toBeGreaterThan(0);
+    });
+    
+    test('CompactPlugin', () => {
+      const formatter = createFormatter({ 
+        ...PRESETS.BI_STANDARD, 
+        compact: true, 
+        compactThreshold: 10000,
+        compactPrecision: 1 
+      }, []); // No plugins to avoid interference
+      
+      expect(formatter.format(1000)).toBe('Rp1.000,00');
+      expect(formatter.format(10000)).toBe('Rp10,0RB');
+      expect(formatter.format(1000000)).toBe('Rp1,0JT');
+    });
+    
+    test('CompactPlugin with autoDetect true', () => {
+      const formatter = createFormatter(PRESETS.BI_STANDARD, [new CompactPlugin({ autoDetect: true })]);
+      // Dengan autoDetect true, angka >= 1000 akan dicompact
+      expect(formatter.format(999)).toBe('Rp999,00');
+      expect(formatter.format(1000)).toBe('Rp1,0RB');
+      expect(formatter.format(1000000)).toBe('Rp1,0JT');
+    });
+    
+    test('CompactPlugin with custom units', () => {
+      const formatter = createFormatter(PRESETS.BI_STANDARD, [new CompactPlugin({
+        units: {
+          thousand: 'K',
+          million: 'M',
+          billion: 'B',
+          trillion: 'T'
+        }
+      })]);
+      // Aktifkan compact di options
+      formatter.setOptions({ compact: true, compactThreshold: 1000 });
+      expect(formatter.format(1000)).toBe('Rp1,0K');
+      expect(formatter.format(1000000)).toBe('Rp1,0M');
+    });
+    
+    test('WordsPlugin', () => {
+      const formatter = createFormatter(PRESETS.BI_STANDARD, ['words']);
+      
+      const words = (formatter as any).formatWords(1234567);
+      expect(words).toContain('juta');
+      expect(words).toContain('rupiah');
+    });
+  });
+  
+  describe('Utils', () => {
+    test('toNumber', () => {
+      expect(toNumber(1000)).toBe(1000);
+      expect(toNumber('1.000,50')).toBe(1000.5);
+      expect(toNumber('Rp1.000,00')).toBe(1000);
+      expect(toNumber(null)).toBe(0);
+      expect(toNumber(undefined)).toBe(0);
+    });
+    
+    test('roundNumber', () => {
+      expect(roundNumber(123.456, 2)).toBe(123.46);
+      expect(roundNumber(123.456, 0)).toBe(123);
+      expect(roundNumber(123.456, 2, 'floor')).toBe(123.45);
+      expect(roundNumber(123.456, 2, 'ceil')).toBe(123.46);
+    });
+    
+    test('formatWithSeparators', () => {
+      expect(formatWithSeparators(1234567.89, ',', '.', 2)).toBe('1.234.567,89');
+      expect(formatWithSeparators(1234567.89, '.', ',', 2)).toBe('1,234,567.89');
+      expect(formatWithSeparators(1234567, ',', '.', 0, true)).toBe('1.234.567');
+    });
+  });
+  
+  describe('Presets', () => {
+    test('BI_STANDARD preset', () => {
+      const formatter = createFormatter('BI_STANDARD', []); // No plugins
+      expect(formatter.format(1234567.89)).toBe('Rp1.234.567,89');
+    });
+    
+    test('ECOMMERCE preset', () => {
+      const formatter = createFormatter('ECOMMERCE', []); // No plugins
+      expect(formatter.format(1234567.89)).toBe('Rp1.234.568');
+      expect(formatter.format(0)).toBe('Gratis');
+    });
+    
+    test('ACCOUNTING preset', () => {
+      const formatter = createFormatter('ACCOUNTING', []); // No plugins
+      expect(formatter.format(-5000)).toBe('(Rp5.000,00)');
+    });
+    
+    test('FINANCIAL preset', () => {
+      const formatter = createFormatter('FINANCIAL', []); // No plugins
+      expect(formatter.format(1234567.89)).toBe('IDR 1,234,567.89');
+    });
+  });
+  
+  describe('Edge Cases', () => {
+    test('Very large numbers', () => {
+      expect(formatRupiah(999999999999.99)).toBe('Rp999.999.999.999,99');
+      // Tanda minus di depan simbol
+      expect(formatRupiah(-999999999999.99)).toBe('-Rp999.999.999.999,99');
+    });
+    
+    test('Very small numbers', () => {
+      expect(formatRupiah(0.01)).toBe('Rp0,01');
+      expect(formatRupiah(0.005)).toBe('Rp0,01');
+      expect(formatRupiah(0.004)).toBe('Rp0,00');
+    });
+    
+    test('Zero and negative zero', () => {
+      expect(formatRupiah(0)).toBe('Rp0,00');
+      expect(formatRupiah(-0)).toBe('Rp0,00');
+    });
+    
+    test('Invalid inputs', () => {
+      expect(formatRupiah(NaN)).toBe('Rp0');
+      expect(formatRupiah(Infinity)).toBe('Rp0');
+      expect(formatRupiah('')).toBe('Rp0');
+      expect(formatRupiah(null)).toBe('Rp0');
+      expect(formatRupiah(undefined)).toBe('Rp0');
+    });
+    
+    test('String inputs with various formats', () => {
+      expect(formatRupiah('1000')).toBe('Rp1.000,00');
+      expect(formatRupiah('1.000,50')).toBe('Rp1.000,50');
+      expect(formatRupiah('Rp1.000,00')).toBe('Rp1.000,00');
+      expect(formatRupiah('IDR 1,000.00')).toBe('Rp1.000,00');
+    });
+  });
+  
+  describe('Performance', () => {
+    test('format performance', () => {
+      const iterations = 1000;
+      const values = Array.from({ length: iterations }, (_, i) => i * 1000);
+      
+      const start = performance.now();
+      
+      for (const value of values) {
+        formatRupiah(value);
+      }
+      
+      const totalTime = performance.now() - start;
+      const averageTime = totalTime / iterations;
+      
+      console.log(`Average format time: ${averageTime.toFixed(3)}ms`);
+      console.log(`Operations per second: ${Math.floor(1000 / averageTime)}`);
+      
+      expect(averageTime).toBeLessThan(0.5);
+    });
+    
+    test('parse performance', () => {
+      const iterations = 1000;
+      const formattedValues = Array.from(
+        { length: iterations }, 
+        (_, i) => `Rp${(i * 1000).toLocaleString('id-ID')},00`
+      );
+      
+      const start = performance.now();
+      
+      for (const value of formattedValues) {
+        parseRupiah(value);
+      }
+      
+      const totalTime = performance.now() - start;
+      const averageTime = totalTime / iterations;
+      
+      console.log(`Average parse time: ${averageTime.toFixed(3)}ms`);
+      console.log(`Operations per second: ${Math.floor(1000 / averageTime)}`);
+      
+      expect(averageTime).toBeLessThan(0.3);
+    });
+  });
+  
+  describe('Compact Plugin Specific Tests', () => {
+    test('CompactPlugin dengan threshold berbeda', () => {
+      const formatter = createFormatter({ 
+        ...PRESETS.BI_STANDARD,
+        compact: true,
+        compactThreshold: 100000,
+        compactPrecision: 2
+      }, []);
+      
+      expect(formatter.format(99999)).toBe('Rp99.999,00');
+      expect(formatter.format(100000)).toBe('Rp100,00RB');
+      expect(formatter.format(1000000)).toBe('Rp1,00JT');
+    });
+    
+    test('CompactPlugin dengan stripTrailingZero', () => {
+      const formatter = createFormatter({ 
+        ...PRESETS.BI_STANDARD,
+        compact: true,
+        compactThreshold: 1000,
+        compactPrecision: 2,
+        stripTrailingZero: true
+      }, []);
+      
+      expect(formatter.format(1000)).toBe('Rp1RB');
+      expect(formatter.format(1500)).toBe('Rp1,5RB');
+      expect(formatter.format(1000000)).toBe('Rp1JT');
     });
   });
 });
